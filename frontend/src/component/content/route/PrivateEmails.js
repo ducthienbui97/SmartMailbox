@@ -48,6 +48,7 @@ export default class PrivateEmails extends Component {
         sender: mail.sender,
         mailRead: mail.mailRead
       });
+      unreadMailCount += 1;
     });
   }
 
