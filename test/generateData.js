@@ -18,9 +18,12 @@ House.create({
       mail: [{
         timeStamp: new Date('2018-02-03'),
         sender: 'John Smith',
-        imgLink: ''
+        imgLink: '',
+        public: false
       }],
-      altNames: ['Chu Chi Hieu', 'Chi Hieu Chu', 'Chi Chu']
+      altNames: ['Chu Chi Hieu', 'Chi Hieu Chu', 'Chi Chu'],
+      notificationIds: []
+      
     },
     {
       email: 'minh123@gmail.com',
@@ -29,10 +32,13 @@ House.create({
       mail: [{
         timeStamp: new Date('2018-07-21'),
         sender: 'Sam Elliot',
-        imgLink: ''
+        imgLink: '',
+        public: false
       }],
 
-      altNames: ['Quang Minh Nguyen', 'Nguyen Quang Minh', 'Quang Nguyen', 'Minh Nguyen']
+      altNames: ['Quang Minh Nguyen', 'Nguyen Quang Minh', 'Quang Nguyen', 'Minh Nguyen'],
+      notificationIds: []
+      
     },
     {
       email: 'qanh123@gmail.com',
@@ -41,58 +47,71 @@ House.create({
       mail: [{
           timeStamp: new Date('2018-07-25'),
           sender: 'Sam Elliot',
-          imgLink: ''
+          imgLink: '',
+          public: false
         },
         {
           timeStamp: new Date('2018-07-26'),
           sender: 'Sam Smith',
-          imgLink: ''
+          imgLink: '',
+          public: false
         },
         {
           timeStamp: new Date('2018-07-27'),
           sender: 'Sam Kelly',
-          imgLink: ''
+          imgLink: '',
+          public: false
         },
         {
           timeStamp: new Date('2018-07-28'),
           sender: 'Sam Klarkson',
-          imgLink: ''
+          imgLink: '',
+          public: false
         },
         {
           timeStamp: new Date('2018-07-29'),
           sender: 'Sam Kim',
-          imgLink: ''
+          imgLink: '',
+          public: false
         },
         {
           timeStamp: new Date('2018-07-30'),
           sender: 'Sam Kardashian',
-          imgLink: ''
+          imgLink: '',
+          public: false
         },
         {
           timeStamp: new Date('2018-07-31'),
           sender: 'Sam Torres',
-          imgLink: ''
+          imgLink: '',
+          public: false
         },
         {
           timeStamp: new Date('2018-08-01'),
           sender: 'Sam Fernando',
-          imgLink: ''
+          imgLink: '',
+          public: false
         }
       ],
 
-      altNames: ['Quynh Anh Nguyen', 'Nguyen Quynh Anh', 'Quynh Nguyen']
+      altNames: ['Quynh Anh Nguyen', 'Nguyen Quynh Anh', 'Quynh Nguyen'],
+      notificationIds: []
+      
     },
     {
       email: 'hello456123@gmail.com',
       firstName: 'John',
       lastName: 'Wick',
       mail: [{
-        timeStamp: new Date(2018 - 08 - 01),
+        timeStamp: new Date('2018-08-01'),
         sender: 'Achilles',
-        imgLink: ''
+        imgLink: '',
+        public: false
       }],
 
-      altNames: ['Wick John', 'J Wick', 'John W']
+      altNames: ['Wick John', 'J Wick', 'John W'],
+      notificationIds: []
+      
     }
   ]
 }).then(function (doc) {

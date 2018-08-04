@@ -9,15 +9,18 @@ const residentSchema = new Schema({
   mail: [{
     timeStamp: Date,
     sender: String,
-    imgLink: String
+    imgLink: String,
+    public: Boolean,
+    note: String
   }],
   altNames: [String],
+  notificationIds: [String]
 });
 
 const houseSchema = new Schema({
   cameraIds: [String],
   address: String,
-  residents: [residentSchema], 
+  residents: [residentSchema],
 });
 
 const House = mongoose.model('House', houseSchema);
