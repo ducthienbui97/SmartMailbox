@@ -22,10 +22,7 @@ export default class PrivateEmails extends Component {
         email: this.props.email
       })
       .then(resident => {
-        let mails = resident.data.mail.sort((mail1, mail2) => {
-          if (mail1 < mail2) return -1;
-          else return 1;
-        });
+        let mails = resident.data.mail;
         fullName = resident.data.firstName + " " + resident.data.lastName;
         for (let i = 0; i < mails.length; i++) {
           data.push({
@@ -35,13 +32,17 @@ export default class PrivateEmails extends Component {
             mailRead: mails[i].mailRead
           });
         }
+        data = data.sort((mail1, mail2) => {
+          if (mail1.time < mail2.time) return -1;
+          else return 1;
+        });
         unreadMailCount = mails.filter(mail => !mail.mailRead).length;
         this.props.fn(unreadMailCount);
         loading = false;
         this.forceUpdate();
       });
     this.props.socket.on(`${this.props.email}-mail-added`, mail => {
-      data.push({
+      data.unshift({
         imgLink: mail.imgLink,
         time: mail.timeStamp,
         sender: mail.sender,
