@@ -24,7 +24,7 @@ class App extends Component {
         {/*</p>*/}
         {/*<Button>Hello wolrld</Button>*/}
         {/*</div>*/}
-        <Route component={Sidebar}/>
+        <Route path="/" component={Sidebar}/>
       </Router>
     );
   }
