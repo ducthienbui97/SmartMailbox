@@ -42,13 +42,17 @@ router.post('/image', upload.single("image"), async (req, res, next) => {
         let text = result.data.responses[0].textAnnotations[0].description.toLowerCase();
         console.log(text);
         let toBeSend = [];
-        let sender = text.split("\n")[0];
+        let blackList = ["postal", "post", "auspost", "paid", "australia"];
         house.residents.forEach(resident => {
             altNames = resident.altNames
-            if (altNames.find(name => text.indexOf(name) >= 0)) {
+            if (altNames.find(name => text.indexOf(name.toLowerCase()) >= 0)) {
                 toBeSend.push(resident);
+                blackList.concat(altNames);
             }
-        })
+        });
+        let sender = text.split("\n").find(text => {
+            if (text.indexOf("postage") < 0 && )
+        });
         let promises = [];
         toBeSend.forEach(resident => {
             resident.mail.push({
