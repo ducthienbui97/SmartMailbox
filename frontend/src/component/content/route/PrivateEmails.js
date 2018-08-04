@@ -34,7 +34,11 @@ export default class PrivateEmails extends Component {
           mailRead: mail.mailRead
         });
         unreadMailCount += 1;
-        this.setState({ data, unreadMailCount });
+        this.setState({ data, unreadMailCount, loading: true }, () => {
+          setTimeout(() => {
+            this.setState({ loading: false });
+          }, 750);
+        });
       });
     axios
       .post(`${this.props.url}/api/mail`, {
