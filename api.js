@@ -1,41 +1,50 @@
-var router = require("express").Router();
-var axios = require("axios");
-var utility = require("./utility");
-var multer = require("multer");
-const imgurHeaders = {
-    Authorization: "Client-ID " + process.env.IM_C
-};
-const onesignalHeaders = {
-    Authorization: "Basic " + process.env.OS
-}
-var upload = multer({
-    storage: multer.memoryStorage()
-})
+function route(io) {
+  var router = require('express').Router();
+  var axios = require('axios');
+  var utility = require('./utility');
+  var multer = require('multer');
 
-router.post('/image', upload.single("image"), async (req, res, next) => {
+  const imgurHeaders = {
+    Authorization: 'Client-ID ' + process.env.IM_C
+  };
+
+  const onesignalHeaders = {
+      Authorization: "Basic " + process.env.OS
+  }
+  var upload = multer({
+    storage: multer.memoryStorage()
+  });
+
+  router.post('/image', upload.single('image'), async (req, res, next) => {
     let imageURL = (await axios.post(
-        "https://api.imgur.com/3/image", {
-            image: req.file.buffer.toString("base64")
-        }, {
-            headers: imgurHeaders
-        }
+      'https://api.imgur.com/3/image',
+      {
+        image: req.file.buffer.toString('base64')
+      },
+      {
+        headers: imgurHeaders
+      }
     )).data.data.link;
     let house;
     if (req.body.email) {
-        house = await utility.findHouseByEmail(req.body.email);
+      house = await utility.findHouseByEmail(req.body.email);
     } else {
-        house = await utility.findHouseByCameraId(req.body.camId);
+      house = await utility.findHouseByCameraId(req.body.camId);
     }
 
-    axios.post(process.env.OCR_URL, {
-        "requests": [{
-            "features": [{
-                "type": "TEXT_DETECTION"
-            }],
-            "image": {
-                "source": {
-                    "imageUri": imageURL
-                }
+    axios
+      .post(process.env.OCR_URL, {
+        requests: [
+          {
+            features: [
+              {
+                type: 'TEXT_DETECTION'
+              }
+            ],
+            image: {
+              source: {
+                imageUri: imageURL
+              }
             }
         }]
     }).then(result => {
@@ -82,34 +91,39 @@ router.post('/image', upload.single("image"), async (req, res, next) => {
 
     }).catch((err) => {
         console.log(err);
-        res.send(err);
-    })
+        res.json(err);
+      });
+  });
 
-});
-
-router.post('/login', (req, res, next) => {
+  router.post('/login', (req, res, next) => {
     utility.findHouseByEmail(req.body.email).then(house => {
-        house.residents = house.residents.map(resident => {
-            if (resident.email == req.body.email)
-                return resident;
-            else
-                return {
-                    firstName: resident.firstName,
-                    lastName: resident.lastName
-                }
-        })
-        res.json(house);
+      house.residents = house.residents.map(resident => {
+        if (resident.email == req.body.email) return resident;
+        else
+          return {
+            firstName: resident.firstName,
+            lastName: resident.lastName
+          };
+      });
+      res.json(house);
     });
-})
+  });
 
-router.post('/mark-as-read', async (req, res, next) => {
-    console.log(req.body);
+  router.post('/mail', (req, res) => {
+    const { email } = req.body;
+    utility.findResidentByEmail(email).then(resident => res.json(resident));
+  });
+
+  router.post('/mark-as-read', async (req, res, next) => {
     let house = await utility.findHouseByEmail(req.body.email);
-    let resident = house.residents.find(resident => resident.email === req.body.email);
-    resident.mail.forEach(mail => mail.mailRead = true);
-    house.save();
-    res.send("OK");
-});
+    let resident = house.residents.find(
+      resident => resident.email === req.body.email
+    );
+    resident.mail.forEach(mail => (mail.mailRead = true));
+    house.save();    io.emit('mail-added');
+    res.send('OK');
+  });
+
 
 router.post('/setNotificationIds', (req, res, next) => {
     let house = utility.findHouseByEmail(req.body.email).then(house => {
@@ -134,4 +148,7 @@ router.post('/removeNotificationIds', (req, res, next) => {
         res.send("ok");
     })
 })
-module.exports = router;
+
+  return router;
+}
+module.exports = route;

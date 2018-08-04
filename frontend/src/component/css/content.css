@@ -5,6 +5,16 @@
 .flex-center-vertically {
   display: flex;
   justify-content: center;
-  flex-direction: column;
+  /* flex-direction: column; */
   min-height: 100px;
+}
+
+.mail-img {
+  max-width: 200px;
+}
+
+@media only screen and (max-width: 980px) {
+  .mail-img {
+    width: 100px;
+  }
 }

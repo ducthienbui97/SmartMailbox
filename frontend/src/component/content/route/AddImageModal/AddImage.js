@@ -6,7 +6,6 @@ import Upload from "./Upload";
 
 // const URL = 'http://localhost:8080';
 const URL = "https://aqueous-gorge-93987.herokuapp.com";
-
 export default class AddImage extends Component {
   static propTypes = {
     onUpload: PropTypes.func.isRequired
