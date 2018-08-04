@@ -68,7 +68,7 @@ export default class Sidebar extends Component {
               that.setState({ userId });
               if (userId) {
                 axios.post(`${URL}/api/setNotificationIds`, {
-                  email: this.state.userEmail,
+                  email: that.state.userEmail,
                   notificationId: userId
                 });
               }
@@ -80,14 +80,14 @@ export default class Sidebar extends Component {
             if (that.state.userId != userId) {
               if (that.state.userId) {
                 axios.post(`${URL}/api/removeNotificationIds`, {
-                  email: this.state.userEmail,
+                  email: that.state.userEmail,
                   notificationId: that.state.userId
                 });
               }
               that.setState({ userId });
               if (userId) {
                 axios.post(`${URL}/api/setNotificationIds`, {
-                  email: this.state.userEmail,
+                  email: that.state.userEmail,
                   notificationId: userId
                 });
               }
