@@ -61,14 +61,17 @@ router.post('/image', upload.single("image"), async (req, res, next) => {
                 url: "/private-mails",
                 contents: {
                     en: "You have received a mail from " + sender
-                }
+                },
+                include_player_ids: resident.notificationIds
             }, {
                 headers: onesignalHeaders
-            }))
+            })).then(res => console.log).catch(err => console.log);
         });
+        Promise.all(promises).then(() => {
+            res.send(imageURL);
+            house.save()
+        })
 
-        res.send(imageURL);
-        house.save()
     }).catch((err) => {
         console.log(err);
         res.send(err);
