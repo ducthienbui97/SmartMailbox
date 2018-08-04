@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route, Link, Redirect } from 'react-router-dom';
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 import axios from 'axios';
 
@@ -25,11 +25,19 @@ export default class Sidebar extends Component {
   };
 
   componentDidMount() {
-    axios.post('');
+    console.log('here is isiss i')
+    axios.post('http://localhost:8080/api/login', {
+      email: 'qanh123@gmail.com',
+    }).then(({ data }) => {
+      console.log('res data is ', data)
+    });
   }
 
   render() {
     const { collapsed } = this.state;
+    if (this.props.location.pathname === '/') {
+      return <Redirect  to="/household-mails"/>
+    }
     console.log("this props is ", this.props)
     return (
       <Layout style={{ minHeight: '100vh' }}>

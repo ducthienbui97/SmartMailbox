@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Breadcrumb, Layout, List, Avatar, Icon, Row, Col } from 'antd';
+import { Breadcrumb, List, Icon, Row, Col } from 'antd';
+import AddImage from "./AddImageModal/AddImage";
 
 const listData = [];
 for (let i = 0; i < 23; i++) {
@@ -27,8 +28,9 @@ export default class PrivateEmails extends Component {
     return (
       <div>
         <Breadcrumb style={{ margin: '16px 0' }}>
-          <Breadcrumb.Item>Private mails</Breadcrumb.Item>
+          <Breadcrumb.Item><strong>Private mails</strong></Breadcrumb.Item>
         </Breadcrumb>
+        <AddImage />
         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
           Here is the something
 
