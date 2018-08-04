@@ -65,6 +65,7 @@ router.post('/image', upload.single("image"), async (req, res, next) => {
                 "imgLink": imageURL
             });
             axios.post("https://onesignal.com/api/v1/notifications", {
+                app_id: process.env.APP_ID,
                 data: resident.mail[resident.mail.length - 1],
                 url: "/private-mails",
                 contents: {
