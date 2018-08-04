@@ -45,10 +45,9 @@ router.post('/image', upload.single("image"), async (req, res, next) => {
         let blackList = ["postal", "post", "auspost", "paid", "australia"];
         house.residents.forEach(resident => {
             altNames = resident.altNames
-            console.log(altNames);
             if (altNames.find(name => text.indexOf(name.toLowerCase()) >= 0)) {
                 toBeSend.push(resident);
-                blackList.concat(altNames);
+                blackList = blackList.concat(altNames);
             }
         });
         console.log(blackList);
@@ -74,7 +73,7 @@ router.post('/image', upload.single("image"), async (req, res, next) => {
                 include_player_ids: resident.notificationIds
             }, {
                 headers: onesignalHeaders
-            }).then(() => console.log(resident.email));
+            }).then(() => console.log(resident.email)).catch(err => console.log(err));
         });
 
         res.send(imageURL);
