@@ -21,13 +21,13 @@ const IconText = ({ type, text }) => (
   </span>
 );
 
-export default class HouseholdEmails extends Component {
+export default class PrivateEmails extends Component {
   render() {
     console.log('render household')
     return (
       <div>
         <Breadcrumb style={{ margin: '16px 0' }}>
-          <Breadcrumb.Item>Household mails</Breadcrumb.Item>
+          <Breadcrumb.Item>Private mails</Breadcrumb.Item>
         </Breadcrumb>
         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
           Here is the something

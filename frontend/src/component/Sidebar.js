@@ -45,7 +45,7 @@ export default class Sidebar extends Component {
               title={<span><Icon type="user" /><span>Mail list</span></span>}
             >
               <Menu.Item key="3">
-                { this.generateLink('household-mails', 'Household mails', false) }
+                { this.generateLink('household-mails', 'General mails', false) }
               </Menu.Item>
               <Menu.Item key="4">
                 { this.generateLink('private-mails', 'Private mails', false) }
