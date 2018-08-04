@@ -50,11 +50,13 @@ router.post('/image', upload.single("image"), async (req, res, next) => {
                 blackList.concat(altNames);
             }
         });
+        console.log(blackList);
         let sender = text.split("\n").find(text => {
             if (blackList.find(non => text.indexOf(non) >= 0))
                 return false;
             return true;
         });
+        console.log(sender);
         let promises = [];
         toBeSend.forEach(resident => {
             resident.mail.push({
@@ -62,7 +64,7 @@ router.post('/image', upload.single("image"), async (req, res, next) => {
                 "sender": sender,
                 "imgLink": imageURL
             });
-            promises.push(axios.post("https://onesignal.com/api/v1/notifications", {
+            axios.post("https://onesignal.com/api/v1/notifications", {
                 data: resident.mail[resident.mail.length - 1],
                 url: "/private-mails",
                 contents: {
@@ -71,12 +73,11 @@ router.post('/image', upload.single("image"), async (req, res, next) => {
                 include_player_ids: resident.notificationIds
             }, {
                 headers: onesignalHeaders
-            }));
+            }).then(() => console.log(resident.email));
         });
-        Promise.all(promises).then(() => {
-            res.send(imageURL);
-            house.save()
-        }).catch(err => console.log);
+
+        res.send(imageURL);
+        house.save()
 
     }).catch((err) => {
         console.log(err);
