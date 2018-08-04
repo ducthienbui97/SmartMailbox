@@ -10,7 +10,9 @@ mongoose.connect(process.env.DB_URL);
 mongoose.connection.on("open", () => console.log("connected"));
 var app = express();
 var api = require('./api');
+var cors = require('cors');
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
