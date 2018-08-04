@@ -26,7 +26,7 @@ export default class Sidebar extends Component {
 
   componentDidMount() {
     console.log('here is isiss i')
-    axios.post('http://localhost:8080/api/login', {
+    axios.post('/api/login', {
       email: 'qanh123@gmail.com',
     }).then(({ data }) => {
       console.log('res data is ', data)
