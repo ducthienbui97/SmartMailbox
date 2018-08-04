@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import { Button } from 'antd';
+import { Router, Route } from 'react-router-dom';
+import createHistory                          from "history/createBrowserHistory"
 import logo from './logo.svg';
 import './App.css';
+import './component/css/content.css';
 
 import Sidebar from './component/Sidebar';
+
+const history = createHistory();
 
 class App extends Component {
   render() {
     return (
-      <div>
+      <Router history={history}>
         {/*<div className="App">*/}
         {/*<Sidebar />*/}
         {/*<header className="App-header">*/}
@@ -20,8 +24,8 @@ class App extends Component {
         {/*</p>*/}
         {/*<Button>Hello wolrld</Button>*/}
         {/*</div>*/}
-        <Sidebar/>
-      </div>
+        <Route component={Sidebar}/>
+      </Router>
     );
   }
 }
