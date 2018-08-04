@@ -65,12 +65,12 @@ router.post('/image', upload.single("image"), async (req, res, next) => {
                 include_player_ids: resident.notificationIds
             }, {
                 headers: onesignalHeaders
-            })).then(res => console.log).catch(err => console.log);
+            }));
         });
         Promise.all(promises).then(() => {
             res.send(imageURL);
             house.save()
-        })
+        }).then(res => console.log).catch(err => console.log);
 
     }).catch((err) => {
         console.log(err);
