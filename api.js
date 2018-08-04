@@ -64,7 +64,6 @@ function route(io) {
             sender: sender,
             imgLink: imageURL
           });
-          promises.push();
         });
 
         res.send(imageURL);

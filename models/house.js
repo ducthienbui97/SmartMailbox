@@ -6,16 +6,14 @@ const residentSchema = new Schema({
   email: String,
   firstName: String,
   lastName: String,
-  mail: [
-    {
-      timeStamp: Date,
-      sender: String,
-      imgLink: String,
-      public: Boolean,
-      note: String,
-      mailRead: Boolean
-    }
-  ],
+  mail: [{
+    timeStamp: Date,
+    sender: String,
+    imgLink: String,
+    public: Boolean,
+    note: String,
+    mailRead: {type: Boolean, default: false}
+  }],
   altNames: [String],
   notificationIds: [String]
 });
@@ -23,7 +21,7 @@ const residentSchema = new Schema({
 const houseSchema = new Schema({
   cameraIds: [String],
   address: String,
-  residents: [residentSchema]
+  residents: [residentSchema],
 });
 
 const House = mongoose.model('House', houseSchema);

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Spin, Breadcrumb, Layout, List, Avatar, Icon, Row, Col } from 'antd';
+import AddImage from "./AddImageModal/AddImage";
 import axios from 'axios';
 
 let data = [];
@@ -85,15 +86,17 @@ export default class PrivateEmails extends Component {
     return (
       <div>
         <Breadcrumb style={{ margin: '16px 0' }}>
+          <Breadcrumb.Item><strong>Private mails</strong></Breadcrumb.Item>
           <Breadcrumb.Item style={headerStyle}>Private mails</Breadcrumb.Item>
         </Breadcrumb>
+        <AddImage />
         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
           <div style={userStyle}>User: {fullName}</div>
           <List
             itemLayout="vertical"
             size="large"
             pagination={{
-              onChange: page => {
+              onChange: (page) => {
                 console.log(page);
               },
               pageSize: 4
@@ -146,6 +149,6 @@ export default class PrivateEmails extends Component {
           />
         </div>
       </div>
-    );
+    )
   }
 }

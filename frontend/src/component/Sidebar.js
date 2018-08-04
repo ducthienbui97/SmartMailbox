@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route, Link, Redirect } from 'react-router-dom';
 import { Layout, Menu, Breadcrumb, Icon, Badge } from 'antd';
 import axios from 'axios';
 import socket from '../socket';
@@ -8,20 +8,14 @@ import MainContent from './content/Content';
 
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
-
+const URL = 'https://aqueous-gorge-93987.herokuapp.com/';
 export default class Sidebar extends Component {
-  componentDidMount() {
-    socket.on('mail-added', () => {
-      console.log('CLIENT RECEIVED MSG');
-    });
-  }
-
   state = {
     collapsed: false,
     unreadCount: 0
   };
 
-  onCollapse = collapsed => {
+  onCollapse = (collapsed) => {
     console.log(collapsed);
     this.setState({ collapsed });
   };
@@ -49,6 +43,24 @@ export default class Sidebar extends Component {
     this.setState({ unreadCount: count });
   };
 
+  componentDidMount() {
+    axios.post('/api/login', {
+      email: 'qanh123@gmail.com',
+    }).then(({ data }) => {
+      console.log('res data is ', data)
+    });
+    window.OneSignal.push(function () {
+      /* These examples are all valid */
+      window.OneSignal.getUserId(function (userId) {
+        console.log("OneSignal User ID:", userId);
+        // (Output) OneSignal User ID: 270a35cd-4dda-4b3f-b04e-41d7463a2316
+      });
+    });
+    socket.on('mail-added', () => {
+      console.log('CLIENT RECEIVED MSG');
+    });
+  };
+
   markAsRead = () => {
     axios
       .post('http://localhost:8080/api/mark-as-read', {
@@ -59,6 +71,9 @@ export default class Sidebar extends Component {
 
   render() {
     const { collapsed, unreadCount } = this.state;
+    if (this.props.location.pathname === '/') {
+      return <Redirect  to="/household-mails"/>
+    }
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
@@ -68,7 +83,7 @@ export default class Sidebar extends Component {
               <span hidden={collapsed}>{'{House}'}</span>
             </Menu.Item>
           </Menu>
-          <Menu theme="dark" defaultSelectedKeys={['sub1']} mode="inline">
+          <Menu theme="dark" defaultSelectedKeys={['3']} mode="inline">
             <SubMenu
               key="sub1"
               title={
@@ -92,11 +107,11 @@ export default class Sidebar extends Component {
             </SubMenu>
             <Menu.Item key="9">
               <Icon type="user-add" />
-              {this.generateLink('add-user', 'Add user', collapsed)}
+              { this.generateLink('add-user', 'Add user', collapsed) }
             </Menu.Item>
             <Menu.Item key="10">
               <Icon type="camera-o" />
-              {this.generateLink('add-mailbox', 'Add mailbox', collapsed)}
+              { this.generateLink('add-mailbox', 'Add mailbox', collapsed) }
             </Menu.Item>
           </Menu>
         </Sider>

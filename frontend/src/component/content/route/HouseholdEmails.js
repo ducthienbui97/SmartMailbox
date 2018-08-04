@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Breadcrumb, Layout, List, Avatar, Icon, Row, Col } from 'antd';
+import AddImage from "./AddImageModal/AddImage";
 import axios from 'axios';
 
 const IconText = ({ type, text }) => (
@@ -11,45 +12,23 @@ const IconText = ({ type, text }) => (
 
 let listData = [];
 export default class HouseholdEmails extends Component {
-  // componentDidMount() {
-  //   axios
-  //     .post('http://localhost:8080/mail', {
-  //       email: 'aaazureee@gmail.com'
-  //     })
-  //     .then(resident => {
-  //       console.log(resident);
-  //     });
-  //   for (let i = 0; i < 23; i++) {
-  //     listData.push({
-  //       href: 'http://ant.design',
-  //       title: `ant design part ${i}`,
-  //       avatar:
-  //         'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-  //       description:
-  //         'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-  //       content:
-  //         'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
-  //     });
-  //   }
-  // }
-
   render() {
-    console.log('render household');
     return (
       <div>
         <Breadcrumb style={{ margin: '16px 0' }}>
-          <Breadcrumb.Item>Household mails</Breadcrumb.Item>
+          <Breadcrumb.Item><strong>Household mails</strong></Breadcrumb.Item>
         </Breadcrumb>
+        <AddImage />
         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
           Here is the something
           <List
             itemLayout="vertical"
             size="large"
             pagination={{
-              onChange: page => {
+              onChange: (page) => {
                 console.log(page);
               },
-              pageSize: 3
+              pageSize: 3,
             }}
             dataSource={listData}
             renderItem={item => (
