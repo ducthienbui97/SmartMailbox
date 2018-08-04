@@ -11,6 +11,7 @@ var upload = multer({
 })
 
 router.post('/image', upload.single("image"), async (req, res, next) => {
+    console.log(req.body);
     let imageURL = (await axios.post(
         "https://api.imgur.com/3/image", {
             image: req.file.buffer.toString("base64")
@@ -54,14 +55,13 @@ router.post('/image', upload.single("image"), async (req, res, next) => {
                 "sender": sender,
                 "imgLink": imageURL
             });
-            promises.push()
-        })
+        });
 
         res.send(imageURL);
         house.save()
     }).catch((err) => {
         console.log(err);
-        res.json(err);
+        res.send(err);
     })
 
 });

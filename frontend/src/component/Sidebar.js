@@ -7,7 +7,7 @@ import MainContent from './content/Content';
 
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
-
+const URL = 'https://aqueous-gorge-93987.herokuapp.com/';
 export default class Sidebar extends Component {
   state = {
     collapsed: false,
@@ -25,7 +25,6 @@ export default class Sidebar extends Component {
   };
 
   componentDidMount() {
-    console.log('here is isiss i')
     axios.post('/api/login', {
       email: 'qanh123@gmail.com',
     }).then(({ data }) => {
