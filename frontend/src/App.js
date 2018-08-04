@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Router, Route } from 'react-router-dom';
-import createHistory                          from "history/createBrowserHistory"
+import createHistory from 'history/createBrowserHistory';
 import logo from './logo.svg';
 import './App.css';
 import './component/css/content.css';
 
 import Sidebar from './component/Sidebar';
+import InviteMember from './component/InviteMember';
 
 const history = createHistory();
 
@@ -24,7 +25,7 @@ class App extends Component {
         {/*</p>*/}
         {/*<Button>Hello wolrld</Button>*/}
         {/*</div>*/}
-        <Route path="/" component={Sidebar}/>
+        <Route path="/" component={Sidebar} />
       </Router>
     );
   }
