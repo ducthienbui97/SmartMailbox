@@ -18,7 +18,7 @@ const IconText = ({ type, text }) => (
 export default class PrivateEmails extends Component {
   componentDidMount() {
     axios
-      .post('http://localhost:8080/api/mail', {
+      .post('/api/mail', {
         email: 'phu@gmail.com'
       })
       .then(resident => {

@@ -63,7 +63,7 @@ export default class Sidebar extends Component {
 
   markAsRead = () => {
     axios
-      .post('http://localhost:8080/api/mark-as-read', {
+      .post('/api/mark-as-read', {
         email: 'qanh123@gmail.com'
       })
       .then(() => this.setState({ unreadCount: 0 }));
