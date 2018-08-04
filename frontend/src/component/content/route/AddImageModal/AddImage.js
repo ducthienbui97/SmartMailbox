@@ -39,7 +39,7 @@ export default class AddImage extends Component {
         formData.append("email", email);
         console.log("formData is ", formData);
         axios
-          .post(`${URL}/api/image`, formData, {
+          .post(`/api/image`, formData, {
             headers: {
               "content-type": "multipart/form-data"
             }
