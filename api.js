@@ -51,7 +51,9 @@ router.post('/image', upload.single("image"), async (req, res, next) => {
             }
         });
         let sender = text.split("\n").find(text => {
-            if (text.indexOf("postage") < 0 && )
+            if (blackList.find(non => text.indexOf(non) >= 0))
+                return false;
+            return true;
         });
         let promises = [];
         toBeSend.forEach(resident => {
