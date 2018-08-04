@@ -45,6 +45,7 @@ router.post('/image', upload.single("image"), async (req, res, next) => {
         let blackList = ["postal", "post", "auspost", "paid", "australia"];
         house.residents.forEach(resident => {
             altNames = resident.altNames
+            console.log(altNames);
             if (altNames.find(name => text.indexOf(name.toLowerCase()) >= 0)) {
                 toBeSend.push(resident);
                 blackList.concat(altNames);
