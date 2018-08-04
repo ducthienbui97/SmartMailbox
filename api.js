@@ -39,7 +39,7 @@ router.post('/image', upload.single("image"), async (req, res, next) => {
             }
         }]
     }).then(result => {
-        let text = result.data.responses[0].textAnnotations[0].description;
+        let text = result.data.responses[0].textAnnotations[0].description.toLowerCase();
         console.log(text);
         let toBeSend = [];
         let sender = text.split("\n")[0];
@@ -70,7 +70,7 @@ router.post('/image', upload.single("image"), async (req, res, next) => {
         Promise.all(promises).then(() => {
             res.send(imageURL);
             house.save()
-        }).then(res => console.log).catch(err => console.log);
+        }).catch(err => console.log);
 
     }).catch((err) => {
         console.log(err);
