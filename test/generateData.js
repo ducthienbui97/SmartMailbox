@@ -87,7 +87,7 @@ House.create({
       firstName: 'John',
       lastName: 'Wick',
       mail: [{
-        timeStamp: new Date(2018 - 08 - 01),
+        timeStamp: new Date('2018-08-01'),
         sender: 'Achilles',
         imgLink: ''
       }],
