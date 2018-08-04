@@ -21,6 +21,15 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+  <script>
+    var OneSignal = window.OneSignal || [];
+    OneSignal.push(function () {
+      OneSignal.init({
+        appId: "2142c872-a501-4144-b48f-0d5e10105ca6",
+      });
+    });
+  </script>
   <title>React App</title>
 </head>
 
