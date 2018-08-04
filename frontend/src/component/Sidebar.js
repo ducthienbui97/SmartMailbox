@@ -36,16 +36,17 @@ export default class Sidebar extends Component {
       .then(({ data }) => {
         console.log("res data is ", data);
       });
+    let that = this;
     window.OneSignal.push(function() {
       window.OneSignal.getUserId(function(userId) {
-        if (this.state.userId != userId) {
-          if (this.state.userId) {
+        if (that.state.userId != userId) {
+          if (that.state.userId) {
             axios.post("/api/removeNotificationIds", {
               email: userEmail,
-              notificationId: this.state.userId
+              notificationId: that.state.userId
             });
           }
-          this.setState({ userId });
+          that.setState({ userId });
           if (userId) {
             axios.post("/api/setNotificationIds", {
               email: userEmail,
@@ -57,14 +58,14 @@ export default class Sidebar extends Component {
     });
     window.OneSignal.on("subscriptionChange", function(isSubscribed) {
       window.OneSignal.getUserId(function(userId) {
-        if (this.state.userId != userId) {
-          if (this.state.userId) {
+        if (that.state.userId != userId) {
+          if (that.state.userId) {
             axios.post("/api/removeNotificationIds", {
               email: userEmail,
-              notificationId: this.state.userId
+              notificationId: that.state.userId
             });
           }
-          this.setState({ userId });
+          that.setState({ userId });
           if (userId) {
             axios.post("/api/setNotificationIds", {
               email: userEmail,
