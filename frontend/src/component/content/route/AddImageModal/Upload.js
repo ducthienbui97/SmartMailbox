@@ -10,12 +10,7 @@ export default class PicturesWall extends Component {
   state = {
     previewVisible: false,
     previewImage: '',
-    fileList: [{
-      uid: -1,
-      name: 'xxx.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    }],
+    fileList: this.props.fileList,
   };
 
   handleCancel = () => this.setState({ previewVisible: false })
@@ -27,12 +22,9 @@ export default class PicturesWall extends Component {
     });
   };
 
-  handleChange = ({ fileList }) => this.setState({ fileList });
-
-  onUpload = () => {
-    const { fileList } = this.state;
-    const { onUpload } = this.props;
-
+  handleChange = ({ fileList }) => {
+    this.setState({ fileList });
+    this.props.onImageChange(fileList);
   };
 
   render() {

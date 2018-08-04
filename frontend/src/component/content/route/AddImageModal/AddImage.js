@@ -12,6 +12,12 @@ export default class AddImage extends Component {
     ModalText: 'Content of the modal',
     visible: false,
     confirmLoading: false,
+    fileList: [{
+      uid: -1,
+      name: 'xxx.png',
+      status: 'done',
+      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    }],
   };
 
   showModal = () => {
@@ -34,14 +40,17 @@ export default class AddImage extends Component {
   };
 
   handleCancel = () => {
-    console.log('Clicked cancel button');
     this.setState({
       visible: false,
     });
   };
 
+  onImageChange = (fileList) => {
+    this.setState({ fileList: fileList });
+  };
+
   render() {
-    const { visible, confirmLoading, ModalText } = this.state;
+    const { visible, confirmLoading, ModalText, fileList } = this.state;
     return (
       <div>
         <Button type="primary" onClick={this.showModal}>Add new mail</Button>
@@ -51,8 +60,9 @@ export default class AddImage extends Component {
           onOk={this.handleOk}
           confirmLoading={confirmLoading}
           onCancel={this.handleCancel}
+          okButtonProps={{ disabled: fileList.length === 0 }}
         >
-          <Upload onUpload={this.props.onUpload} />
+          <Upload onUpload={this.props.onUpload} onImageChange={this.onImageChange} fileList={fileList}/>
         </Modal>
       </div>
     )
