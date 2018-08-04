@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Switch, Route, Link, Redirect } from 'react-router-dom';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Badge } from 'antd';
 import axios from 'axios';
+import socket from '../socket';
 
 import MainContent from './content/Content';
 
@@ -11,6 +12,7 @@ const URL = 'https://aqueous-gorge-93987.herokuapp.com/';
 export default class Sidebar extends Component {
   state = {
     collapsed: false,
+    unreadCount: 0
   };
 
   onCollapse = (collapsed) => {
@@ -18,10 +20,27 @@ export default class Sidebar extends Component {
     this.setState({ collapsed });
   };
 
-  generateLink = (url, text, hidden) => {
+  generateLink = (url, text, hidden, bool) => {
     return (
-      <Link to={url} className="inline-link"><span hidden={hidden}>{text}</span></Link>
-    )
+      <Link to={url} className="inline-link">
+        <span hidden={hidden}>{text}</span>
+        {bool && (
+          <Badge
+            count={this.state.unreadCount}
+            style={{
+              marginLeft: 10,
+              backgroundColor: '#fff',
+              color: '#999',
+              boxShadow: '0 0 0 1px #d9d9d9 inset'
+            }}
+          />
+        )}
+      </Link>
+    );
+  };
+
+  updateUnreadMail = count => {
+    this.setState({ unreadCount: count });
   };
 
   componentDidMount() {
@@ -37,37 +56,53 @@ export default class Sidebar extends Component {
         // (Output) OneSignal User ID: 270a35cd-4dda-4b3f-b04e-41d7463a2316
       });
     });
-  }
+    socket.on('mail-added', () => {
+      console.log('CLIENT RECEIVED MSG');
+    });
+  };
+
+  markAsRead = () => {
+    axios
+      .post('/api/mark-as-read', {
+        email: 'qanh123@gmail.com'
+      })
+      .then(() => this.setState({ unreadCount: 0 }));
+  };
 
   render() {
-    const { collapsed } = this.state;
+    const { collapsed, unreadCount } = this.state;
     if (this.props.location.pathname === '/') {
       return <Redirect  to="/household-mails"/>
     }
-    console.log("this props is ", this.props)
     return (
       <Layout style={{ minHeight: '100vh' }}>
-        <Sider
-          collapsible
-          collapsed={collapsed}
-          onCollapse={this.onCollapse}
-        >
+        <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
           <div className="logo" />
           <Menu selectable={false} theme="dark">
             <Menu.Item key="0">
-              <span hidden={collapsed}>{"\{House\}"}</span>
+              <span hidden={collapsed}>{'{House}'}</span>
             </Menu.Item>
           </Menu>
-          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+          <Menu theme="dark" defaultSelectedKeys={['3']} mode="inline">
             <SubMenu
               key="sub1"
-              title={<span><Icon type="user" /><span>Mail list</span></span>}
+              title={
+                <span>
+                  <Icon type="user" />
+                  <span>Mail list</span>
+                </span>
+              }
             >
               <Menu.Item key="3">
-                { this.generateLink('household-mails', 'General mails', false) }
+                {this.generateLink('household-mails', 'General mails', false)}
               </Menu.Item>
-              <Menu.Item key="4">
-                { this.generateLink('private-mails', 'Private mails', false) }
+              <Menu.Item key="4" onClick={this.markAsRead}>
+                {this.generateLink(
+                  'private-mails',
+                  'Private mails',
+                  false,
+                  true
+                )}
               </Menu.Item>
             </SubMenu>
             <Menu.Item key="9">
@@ -80,7 +115,7 @@ export default class Sidebar extends Component {
             </Menu.Item>
           </Menu>
         </Sider>
-        <MainContent route={this.props}/>
+        <MainContent route={this.props} fn={this.updateUnreadMail} />
       </Layout>
     );
   }
