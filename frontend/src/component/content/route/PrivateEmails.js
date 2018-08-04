@@ -7,7 +7,7 @@ let data = [];
 let fullName = "";
 let unreadMailCount = 0;
 let loading = true;
-
+let socket;
 const IconText = ({ type, text }) => (
   <span>
     <Icon
@@ -22,6 +22,17 @@ const IconText = ({ type, text }) => (
 
 export default class PrivateEmails extends Component {
   componentDidMount() {
+    socket = this.props.socket;
+    socket.on(`${this.props.email}-mail-added`, mail => {
+      console.log(mail);
+      data.unshift({
+        imgLink: mail.imgLink,
+        time: mail.timeStamp,
+        sender: mail.sender,
+        mailRead: mail.mailRead
+      });
+      unreadMailCount += 1;
+    });
     axios
       .post(`${this.props.url}/api/mail`, {
         email: this.props.email
@@ -46,17 +57,6 @@ export default class PrivateEmails extends Component {
         loading = false;
         this.forceUpdate();
       });
-    console.log(`${this.props.email}-mail-added`);
-    console.log(this.props.socket);
-    this.props.socket.on(`${this.props.email}-mail-added`, mail => {
-      data.unshift({
-        imgLink: mail.imgLink,
-        time: mail.timeStamp,
-        sender: mail.sender,
-        mailRead: mail.mailRead
-      });
-      unreadMailCount += 1;
-    });
   }
 
   componentWillUnmount() {
