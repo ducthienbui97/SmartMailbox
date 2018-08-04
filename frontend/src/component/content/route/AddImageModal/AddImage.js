@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import Upload from "./Upload";
 
-// const URL = 'http://localhost:8080';
-const URL = "https://aqueous-gorge-93987.herokuapp.com";
 export default class AddImage extends Component {
   static propTypes = {
     onUpload: PropTypes.func.isRequired
@@ -33,12 +31,12 @@ export default class AddImage extends Component {
       () => {
         let formData = new FormData();
         console.log("formData again is ", formData);
-        const email = "qanh123@gmail.com";
+        const email = this.props.email;
         formData.append("image", fileList[0].originFileObj);
         formData.append("email", email);
         console.log("formData is ", formData);
         axios
-          .post(`/api/image`, formData, {
+          .post(`${this.props.url}/api/image`, formData, {
             headers: {
               "content-type": "multipart/form-data"
             }

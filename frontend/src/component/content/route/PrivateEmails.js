@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { Spin, Breadcrumb, Layout, List, Avatar, Icon, Row, Col } from 'antd';
+import React, { Component } from "react";
+import { Spin, Breadcrumb, Layout, List, Avatar, Icon, Row, Col } from "antd";
 import AddImage from "./AddImageModal/AddImage";
-import axios from 'axios';
+import axios from "axios";
 
 let data = [];
-let fullName = '';
+let fullName = "";
 let unreadMailCount = 0;
 let loading = true;
 
@@ -18,12 +18,15 @@ const IconText = ({ type, text }) => (
 export default class PrivateEmails extends Component {
   componentDidMount() {
     axios
-      .post('/api/mail', {
-        email: 'phu@gmail.com'
+      .post(`${this.props.url}/api/mail`, {
+        email: this.props.email
       })
       .then(resident => {
-        let mails = resident.data.mail;
-        fullName = resident.data.firstName + ' ' + resident.data.lastName;
+        let mails = resident.data.mail.sort((mail1, mail2) => {
+          if (mail1 < mail2) return -1;
+          else return 1;
+        });
+        fullName = resident.data.firstName + " " + resident.data.lastName;
         for (let i = 0; i < mails.length; i++) {
           data.push({
             imgLink: mails[i].imgLink,
@@ -37,11 +40,19 @@ export default class PrivateEmails extends Component {
         loading = false;
         this.forceUpdate();
       });
+    this.props.socket.on(`${this.props.email}-mail-added`, mail => {
+      data.push({
+        imgLink: mail.imgLink,
+        time: mail.timeStamp,
+        sender: mail.sender,
+        mailRead: mail.mailRead
+      });
+    });
   }
 
   componentWillUnmount() {
     data = [];
-    fullName = '';
+    fullName = "";
     unreadMailCount = 0;
     loading = true;
   }
@@ -49,22 +60,22 @@ export default class PrivateEmails extends Component {
   render() {
     let headerStyle = {
       fontSize: 22,
-      fontWeight: 'bold',
-      color: '#47acec'
+      fontWeight: "bold",
+      color: "#47acec"
     };
     let userStyle = {
       fontSize: 20,
-      fontWeight: 'bold'
+      fontWeight: "bold"
     };
     if (loading) {
       const antIcon = <Icon type="loading" style={{ fontSize: 48 }} spin />;
       return (
         <div
           style={{
-            display: 'flex',
-            minHeight: '100vh',
-            justifyContent: 'center',
-            alignItems: 'center'
+            display: "flex",
+            minHeight: "100vh",
+            justifyContent: "center",
+            alignItems: "center"
           }}
         >
           <div>
@@ -72,7 +83,7 @@ export default class PrivateEmails extends Component {
             <div
               style={{
                 fontSize: 18,
-                position: 'relative',
+                position: "relative",
                 right: 10,
                 top: 10
               }}
@@ -85,18 +96,20 @@ export default class PrivateEmails extends Component {
     }
     return (
       <div>
-        <Breadcrumb style={{ margin: '16px 0' }}>
-          <Breadcrumb.Item><strong>Private mails</strong></Breadcrumb.Item>
+        <Breadcrumb style={{ margin: "16px 0" }}>
+          <Breadcrumb.Item>
+            <strong>Private mails</strong>
+          </Breadcrumb.Item>
           <Breadcrumb.Item style={headerStyle}>Private mails</Breadcrumb.Item>
         </Breadcrumb>
-        <AddImage />
-        <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+        <AddImage url={this.props.url} email={this.props.email} />
+        <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
           <div style={userStyle}>User: {fullName}</div>
           <List
             itemLayout="vertical"
             size="large"
             pagination={{
-              onChange: (page) => {
+              onChange: page => {
                 console.log(page);
               },
               pageSize: 4
@@ -117,7 +130,7 @@ export default class PrivateEmails extends Component {
                     <img src={item.imgLink} className="mail-img" />
                   </Col>
                   <Col
-                    style={{ height: '100%', alignItems: 'center' }}
+                    style={{ height: "100%", alignItems: "center" }}
                     span={15}
                     offset={2}
                     className=""
@@ -149,6 +162,6 @@ export default class PrivateEmails extends Component {
           />
         </div>
       </div>
-    )
+    );
   }
 }

@@ -63,14 +63,15 @@ function route(io) {
                 console.log(sender);
                 let promises = [];
                 toBeSend.forEach(resident => {
-                    resident.mail.push({
+                    const newMail = {
                         "timeStamp": new Date(),
                         "sender": sender,
                         "imgLink": imageURL
-                    });
+                    }
+                    resident.mail.push(newMail);
                     axios.post("https://onesignal.com/api/v1/notifications", {
                         app_id: process.env.APP_ID,
-                        data: resident.mail[resident.mail.length - 1],
+                        data: newMail,
                         url: "/private-mails",
                         contents: {
                             en: "You have received a mail from " + sender
@@ -79,6 +80,7 @@ function route(io) {
                     }, {
                         headers: onesignalHeaders
                     }).then(() => console.log(resident.email)).catch(err => console.log(err));
+                    io.emit(`${resident.email}-mail-added`, newMail);
                 });
 
                 res.send(imageURL);
@@ -118,7 +120,6 @@ function route(io) {
         );
         resident.mail.forEach(mail => (mail.mailRead = true));
         house.save();
-        io.emit('mail-added');
         res.send('OK');
     });
 
