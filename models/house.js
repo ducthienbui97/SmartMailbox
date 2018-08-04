@@ -6,7 +6,11 @@ const residentSchema = new Schema({
   email: String,
   firstName: String,
   lastName: String,
-  mailTimeStamps: [Date],
+  mail: [{
+    timeStamp: Date,
+    sender: String,
+    imgLink: String
+  }],
   altNames: [String],
 });
 
