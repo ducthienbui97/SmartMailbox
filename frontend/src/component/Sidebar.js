@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import axios from 'axios';
 
 import MainContent from './content/Content';
 
@@ -22,6 +23,10 @@ export default class Sidebar extends Component {
       <Link to={url} className="inline-link"><span hidden={hidden}>{text}</span></Link>
     )
   };
+
+  componentDidMount() {
+    axios.post('');
+  }
 
   render() {
     const { collapsed } = this.state;
