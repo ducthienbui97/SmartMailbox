@@ -5,6 +5,7 @@ import axios from 'axios';
 import socket from '../socket';
 
 import MainContent from './content/Content';
+import AuthenticationPage from './AuthenticationPage';
 
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -12,7 +13,13 @@ const URL = 'https://aqueous-gorge-93987.herokuapp.com/';
 export default class Sidebar extends Component {
   state = {
     collapsed: false,
-    unreadCount: 0
+    unreadCount: 0,
+    authenticate: false,
+  };
+
+  onAuthenticate = () => {
+    localStorage.authenticated = true;
+    this.setState({ authenticate: true });
   };
 
   onCollapse = (collapsed) => {
@@ -71,6 +78,13 @@ export default class Sidebar extends Component {
 
   render() {
     const { collapsed, unreadCount } = this.state;
+
+    if (!localStorage.authenticated) {
+      return (
+        <AuthenticationPage onAuthenticate={this.onAuthenticate}/>
+      )
+    }
+
     if (this.props.location.pathname === '/') {
       return <Redirect  to="/household-mails"/>
     }
