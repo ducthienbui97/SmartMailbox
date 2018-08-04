@@ -6,7 +6,7 @@ const imgurHeaders = {
     Authorization: "Client-ID " + process.env.IM_C
 };
 const onesignalHeaders = {
-    Authorization: "Basic " + process.env.OC
+    Authorization: "Basic " + process.env.OS
 }
 var upload = multer({
     storage: multer.memoryStorage()
