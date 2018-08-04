@@ -42,6 +42,8 @@ export default class AddImage extends Component {
         }
       }).then(({ data }) => {
           console.log('dtata is ', data)
+        })
+        .finally(() => {
           this.setState({
             visible: false,
             confirmLoading: false,
