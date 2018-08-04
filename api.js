@@ -101,23 +101,26 @@ router.post('/mark-as-read', async (req, res, next) => {
 });
 
 router.post('/setNotificationIds', (req, res, next) => {
-    let house = utility.findResidentByEmail(req.body.email).then(house => {
+    let house = utility.findHouseByEmail(req.body.email).then(house => {
+        console.log(req.body.email, req.body.notificationId);
         let resident = house.residents.find(resident => resident.email === req.body.email);
         if (resident.notificationIds.indexOf(req.body.notificationId) < 0) {
             resident.notificationIds.push(req.body.notificationId);
             house.save();
         }
+        res.send("ok");
     })
 })
 
 router.post('/removeNotificationIds', (req, res, next) => {
-    let house = utility.findResidentByEmail(req.body.email).then(house => {
+    let house = utility.findHouseByEmail(req.body.email).then(house => {
         let resident = house.residents.find(resident => resident.email === req.body.email);
         let id = resident.notificationIds.indexOf(req.body.notificationId);
-        if (id > 0) {
+        if (id >= 0) {
             resident.notificationIds.splice(id, 1);
             house.save();
         }
+        res.send("ok");
     })
 })
 module.exports = router;
