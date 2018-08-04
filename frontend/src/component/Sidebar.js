@@ -26,17 +26,16 @@ export default class Sidebar extends Component {
 
   componentDidMount() {
     axios.post('/api/login', {
+      email: 'qanh123@gmail.com',
+    }).then(({ data }) => {
+      console.log('res data is ', data)
+    });
     window.OneSignal.push(function () {
       /* These examples are all valid */
       window.OneSignal.getUserId(function (userId) {
         console.log("OneSignal User ID:", userId);
         // (Output) OneSignal User ID: 270a35cd-4dda-4b3f-b04e-41d7463a2316
       });
-    });
-
-      email: 'qanh123@gmail.com',
-    }).then(({ data }) => {
-      console.log('res data is ', data)
     });
   }
 
