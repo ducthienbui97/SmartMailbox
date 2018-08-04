@@ -13,7 +13,7 @@ const userEmail = "qanh123@gmail.com";
 export default class Sidebar extends Component {
   state = {
     collapsed: false,
-    userId: null
+    userId: null,
     unreadCount: 0
   };
 
