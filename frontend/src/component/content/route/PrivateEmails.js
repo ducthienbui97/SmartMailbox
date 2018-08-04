@@ -3,11 +3,6 @@ import { Spin, Breadcrumb, Layout, List, Avatar, Icon, Row, Col } from "antd";
 import AddImage from "./AddImageModal/AddImage";
 import axios from "axios";
 
-let data = [];
-let fullName = "";
-let unreadMailCount = 0;
-let loading = true;
-let socket;
 const IconText = ({ type, text }) => (
   <span>
     <Icon
@@ -15,35 +10,45 @@ const IconText = ({ type, text }) => (
       style={{
         marginRight: 8
       }}
-    />{" "}
-    {text}{" "}
+    />
+    {text}
   </span>
 );
 
 export default class PrivateEmails extends Component {
+  state = {
+    data: [],
+    fullName: "",
+    unreadMailCount: 0,
+    loading: true
+  };
   componentDidMount() {
-    socket = this.props.socket;
-    socket.on(`${this.props.email}-mail-added`, mail => {
-      console.log(mail);
-      data.unshift({
-        imgLink: mail.imgLink,
-        time: mail.timeStamp,
-        sender: mail.sender,
-        mailRead: mail.mailRead
+    if (this.props.socket)
+      this.props.socket.on(`${this.props.email}-mail-added`, mail => {
+        console.log(mail);
+        let { data, unreadMailCount } = this.state;
+        data.unshift({
+          imgLink: mail.imgLink,
+          time: new Date(mail.timeStamp),
+          sender: mail.sender,
+          mailRead: mail.mailRead
+        });
+        unreadMailCount += 1;
+        this.setState({ data, unreadMailCount });
       });
-      unreadMailCount += 1;
-    });
     axios
       .post(`${this.props.url}/api/mail`, {
         email: this.props.email
       })
       .then(resident => {
+        console.log(resident);
         let mails = resident.data.mail;
-        fullName = resident.data.firstName + " " + resident.data.lastName;
+        let fullName = resident.data.firstName + " " + resident.data.lastName;
+        let data = [];
         for (let i = 0; i < mails.length; i++) {
           data.push({
             imgLink: mails[i].imgLink,
-            time: mails[i].timeStamp,
+            time: new Date(mails[i].timeStamp),
             sender: mails[i].sender,
             mailRead: mails[i].mailRead
           });
@@ -52,18 +57,11 @@ export default class PrivateEmails extends Component {
           if (mail1.time > mail2.time) return -1;
           else return 1;
         });
-        unreadMailCount = mails.filter(mail => !mail.mailRead).length;
+        let unreadMailCount = mails.filter(mail => !mail.mailRead).length;
         this.props.fn(unreadMailCount);
-        loading = false;
-        this.forceUpdate();
+        let loading = false;
+        this.setState({ fullName, data, unreadMailCount, loading });
       });
-  }
-
-  componentWillUnmount() {
-    data = [];
-    fullName = "";
-    unreadMailCount = 0;
-    loading = true;
   }
 
   render() {
@@ -76,7 +74,7 @@ export default class PrivateEmails extends Component {
       fontSize: 20,
       fontWeight: "bold"
     };
-    if (loading) {
+    if (this.state.loading) {
       const antIcon = (
         <Icon
           type="loading"
@@ -96,7 +94,7 @@ export default class PrivateEmails extends Component {
           }}
         >
           <div>
-            <Spin indicator={antIcon} />{" "}
+            <Spin indicator={antIcon} />
             <div
               style={{
                 fontSize: 18,
@@ -106,8 +104,8 @@ export default class PrivateEmails extends Component {
               }}
             >
               Loading...
-            </div>{" "}
-          </div>{" "}
+            </div>
+          </div>
         </div>
       );
     }
@@ -119,11 +117,11 @@ export default class PrivateEmails extends Component {
           }}
         >
           <Breadcrumb.Item>
-            <strong> Private mails </strong>{" "}
-          </Breadcrumb.Item>{" "}
-          <Breadcrumb.Item style={headerStyle}> Private mails </Breadcrumb.Item>{" "}
-        </Breadcrumb>{" "}
-        <AddImage url={this.props.url} email={this.props.email} />{" "}
+            <strong> Private mails </strong>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item style={headerStyle}> Private mails </Breadcrumb.Item>
+        </Breadcrumb>
+        <AddImage url={this.props.url} email={this.props.email} />
         <div
           style={{
             padding: 24,
@@ -131,7 +129,7 @@ export default class PrivateEmails extends Component {
             minHeight: 360
           }}
         >
-          <div style={userStyle}> User: {fullName} </div>{" "}
+          <div style={userStyle}> User: {this.state.fullName} </div>
           <List
             itemLayout="vertical"
             size="large"
@@ -141,7 +139,7 @@ export default class PrivateEmails extends Component {
               },
               pageSize: 4
             }}
-            dataSource={data}
+            dataSource={this.state.data}
             renderItem={item => (
               <List.Item
                 actions={
@@ -155,7 +153,7 @@ export default class PrivateEmails extends Component {
                 <Row>
                   <Col span={5}>
                     <img src={item.imgLink} className="mail-img" />
-                  </Col>{" "}
+                  </Col>
                   <Col
                     style={{
                       height: "100%",
@@ -171,24 +169,27 @@ export default class PrivateEmails extends Component {
                       }}
                     >
                       <div>
-                        <strong> Sender: </strong> {item.sender}{" "}
-                      </div>{" "}
+                        <strong> Sender: </strong> {item.sender}
+                      </div>
                       {/* <div>
                                     <strong>Receiver: </strong>item.receiver
-                                  </div> */}{" "}
+                                  </div> */}
                       <div>
-                        <strong> Time: </strong> {item.time}{" "}
-                      </div>{" "}
+                        <strong> Time: </strong>{" "}
+                        {item.time.toLocaleTimeString("en-AU") +
+                          " " +
+                          item.time.toLocaleDateString("en-AU")}
+                      </div>
                       {/* <div>
                                     <strong>Note: </strong>item.note
-                                  </div> */}{" "}
-                    </div>{" "}
-                  </Col>{" "}
-                </Row>{" "}
+                                  </div> */}
+                    </div>
+                  </Col>
+                </Row>
               </List.Item>
             )}
-          />{" "}
-        </div>{" "}
+          />
+        </div>
       </div>
     );
   }
