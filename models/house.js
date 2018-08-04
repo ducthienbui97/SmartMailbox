@@ -12,12 +12,13 @@ const residentSchema = new Schema({
     imgLink: String
   }],
   altNames: [String],
+  notificationIds: [String]
 });
 
 const houseSchema = new Schema({
   cameraIds: [String],
   address: String,
-  residents: [residentSchema], 
+  residents: [residentSchema],
 });
 
 const House = mongoose.model('House', houseSchema);
