@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { Modal, Button, Icon } from 'antd';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import Upload from './Upload';
+
+// const URL = 'http://localhost:8080';
+const URL = 'https://aqueous-gorge-93987.herokuapp.com';
 
 export default class AddImage extends Component {
   static propTypes = {
@@ -12,12 +16,7 @@ export default class AddImage extends Component {
     ModalText: 'Content of the modal',
     visible: false,
     confirmLoading: false,
-    fileList: [{
-      uid: -1,
-      name: 'xxx.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    }],
+    fileList: [],
   };
 
   showModal = () => {
@@ -27,16 +26,30 @@ export default class AddImage extends Component {
   };
 
   handleOk = () => {
+    const { fileList } = this.state;
     this.setState({
-      ModalText: 'The modal will be closed after two seconds',
       confirmLoading: true,
+    }, () => {
+      let formData = new FormData();
+      console.log('formData again is ', formData)
+      const email = 'qanh123@gmail.com';
+      formData.append('image', fileList[0].originFileObj);
+      formData.append('email', email);
+      console.log('formData is ', formData)
+      axios.post(`${URL}/api/image`, formData, {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      }).then(({ data }) => {
+          console.log('dtata is ', data)
+        })
+        .finally(() => {
+          this.setState({
+            visible: false,
+            confirmLoading: false,
+          });
+        });
     });
-    setTimeout(() => {
-      this.setState({
-        visible: false,
-        confirmLoading: false,
-      });
-    }, 2000);
   };
 
   handleCancel = () => {

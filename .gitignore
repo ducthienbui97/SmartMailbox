@@ -1,5 +1,9 @@
 /node_modules/
 yarn-error*
 .env
-
+package-lock.json
 /.idea
+/v1/
+/frontend/v1/
+package-lock.json
+/frontend/package-lock.json

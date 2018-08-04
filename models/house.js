@@ -11,7 +11,8 @@ const residentSchema = new Schema({
     sender: String,
     imgLink: String,
     public: Boolean,
-    note: String
+    note: String,
+    mailRead: {type: Boolean, default: false}
   }],
   altNames: [String],
   notificationIds: [String]
