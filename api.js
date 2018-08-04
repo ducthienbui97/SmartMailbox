@@ -81,4 +81,12 @@ router.post('/login', (req, res, next) => {
     });
 })
 
+router.post('/mark-as-read', async (req, res, next) => {
+    console.log(req.body);
+    let house = await utility.findHouseByEmail(req.body.email);
+    let resident = house.residents.find(resident => resident.email === req.body.email);
+    resident.mail.forEach(mail => mail.mailRead = true);
+    house.save();
+    res.send("OK");
+});
 module.exports = router;
