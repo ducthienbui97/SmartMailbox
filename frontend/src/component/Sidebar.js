@@ -34,7 +34,7 @@ export default class Sidebar extends Component {
       });
     });
 
-    axios.post('http://localhost:8080/api/login', {
+    axios.post('/api/login', {
       email: 'qanh123@gmail.com',
     }).then(({ data }) => {
       console.log('res data is ', data)
