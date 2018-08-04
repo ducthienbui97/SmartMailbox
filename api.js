@@ -80,6 +80,7 @@ function route(io) {
                     }, {
                         headers: onesignalHeaders
                     }).then(() => console.log(resident.email)).catch(err => console.log(err));
+                    console.log(`${resident.email}-mail-added`);
                     io.emit(`${resident.email}-mail-added`, newMail);
                 });
 
