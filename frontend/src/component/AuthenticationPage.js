@@ -4,8 +4,8 @@ import { Input, Row, Col } from 'antd';
 const Search = Input.Search;
 
 export default class AuthenticationPage extends Component {
-  onAuthenticate = () => {
-    this.props.onAuthenticate();
+  onAuthenticate = (value) => {
+    this.props.onAuthenticate(value);
   };
 
   render() {

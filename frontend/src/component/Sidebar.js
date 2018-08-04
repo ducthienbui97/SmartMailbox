@@ -17,9 +17,20 @@ export default class Sidebar extends Component {
     authenticate: false,
   };
 
-  onAuthenticate = () => {
-    localStorage.authenticated = true;
-    this.setState({ authenticate: true });
+  fetchUserInfo = (email) => {
+    axios.post('http://localhost:8080/api/login', {
+      email: email || localStorage.getItem('authenticated'),
+    }).then(({ data }) => {
+      if (email) {
+        localStorage.setItem('authenticated', email);
+      }
+      this.setState({ authenticate: true, email: localStorage.authenticated });
+      const { address, cameraIds, residents, _id } = data;
+    });
+  };
+
+  onAuthenticate = (email) => {
+    this.fetchUserInfo(email);
   };
 
   onCollapse = (collapsed) => {
@@ -51,11 +62,9 @@ export default class Sidebar extends Component {
   };
 
   componentDidMount() {
-    axios.post('/api/login', {
-      email: 'qanh123@gmail.com',
-    }).then(({ data }) => {
-      console.log('res data is ', data)
-    });
+    if (!this.state.authenticate) {
+      this.fetchUserInfo();
+    }
     window.OneSignal.push(function () {
       /* These examples are all valid */
       window.OneSignal.getUserId(function (userId) {
@@ -77,7 +86,7 @@ export default class Sidebar extends Component {
   };
 
   render() {
-    const { collapsed, unreadCount } = this.state;
+    const { collapsed, unreadCount, email } = this.state;
 
     if (!localStorage.authenticated) {
       return (
@@ -94,7 +103,7 @@ export default class Sidebar extends Component {
           <div className="logo" />
           <Menu selectable={false} theme="dark">
             <Menu.Item key="0">
-              <span hidden={collapsed}>{'{House}'}</span>
+              <span hidden={collapsed} style={{ fontSize: '16px' }}><strong>{email}</strong></span>
             </Menu.Item>
           </Menu>
           <Menu theme="dark" defaultSelectedKeys={['3']} mode="inline">
