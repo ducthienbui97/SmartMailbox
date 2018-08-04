@@ -9,7 +9,9 @@ const residentSchema = new Schema({
   mail: [{
     timeStamp: Date,
     sender: String,
-    imgLink: String
+    imgLink: String,
+    public: Boolean,
+    note: String
   }],
   altNames: [String],
   notificationIds: [String]

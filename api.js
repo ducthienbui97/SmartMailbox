@@ -8,29 +8,62 @@ const imgurHeaders = {
 
 var upload = multer({
     storage: multer.memoryStorage()
-});
+})
 
 router.post('/image', upload.single("image"), async (req, res, next) => {
-    if (req.file) {
-        let imageURL = (await axios.post(
-            "https://api.imgur.com/3/image", {
-                image: req.file.buffer.toString("base64")
-            }, {
-                headers: imgurHeaders
+    let imageURL = (await axios.post(
+        "https://api.imgur.com/3/image", {
+            image: req.file.buffer.toString("base64")
+        }, {
+            headers: imgurHeaders
+        }
+    )).data.data.link;
+    let house;
+    if (req.body.email) {
+        house = await utility.findHouseByEmail(req.body.email);
+    } else {
+        house = await utility.findHouseByCameraId(req.body.camId);
+    }
+
+    axios.post(process.env.OCR_URL, {
+        "requests": [{
+            "features": [{
+                "type": "TEXT_DETECTION"
+            }],
+            "image": {
+                "source": {
+                    "imageUri": imageURL
+                }
             }
-        )).data.data.link;
-        axios.post(process.env.OCR_URL, {
-            "requests": [{
-                "image": {
-                    "content": imageURL
-                },
-                "features": [{
-                    "type": "",
-                    "maxResults": 1
-                }]
-            }]
+        }]
+    }).then(result => {
+        let text = result.data.responses[0].textAnnotations[0].description;
+        console.log(text);
+        let toBeSend = [];
+        let sender = text.split("\n")[0];
+        house.residents.forEach(resident => {
+            altNames = resident.altNames
+            if (altNames.find(name => text.indexOf(name) >= 0)) {
+                toBeSend.push(resident);
+            }
         })
-    };
+        let promises = [];
+        toBeSend.forEach(resident => {
+            resident.mail.push({
+                "timeStamp": new Date(),
+                "sender": sender,
+                "imgLink": imageURL
+            });
+            promises.push()
+        })
+
+        res.send(imageURL);
+        house.save()
+    }).catch((err) => {
+        console.log(err);
+        res.json(err);
+    })
+
 });
 
 router.post('/login', (req, res, next) => {
