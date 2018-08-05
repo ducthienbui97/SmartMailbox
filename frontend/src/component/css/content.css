@@ -38,3 +38,9 @@
 .center h2 {
   font-size: 30px;
 }
+
+.small-menu-item {
+  height: 25px !important;
+  line-height: 25px !important;
+  margin-bottom: 15px !important;
+}
