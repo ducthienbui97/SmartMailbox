@@ -4,22 +4,41 @@ import { Layout, Menu, Breadcrumb, Icon, Badge } from "antd";
 import axios from "axios";
 import io from "socket.io-client";
 
-import MainContent from "./content/Content";
+import MainContent from './content/Content';
+import AuthenticationPage from './AuthenticationPage';
 
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
-const URL = "https://aqueous-gorge-93987.herokuapp.com";
+const URL = 'https://aqueous-gorge-93987.herokuapp.com';
+// const URL = 'http://localhost:8080';
 export default class Sidebar extends Component {
   state = {
     collapsed: false,
     userId: null,
-    unreadCount: 0,
     currentData: null,
-    userEmail: "qanh123@gmail.com",
-    socket: io(URL)
+    unreadCount: 0,
+    authenticate: false,
+    userEmail: sessionStorage.authenticated,
+    socket: io(URL),
   };
 
-  onCollapse = collapsed => {
+  fetchUserInfo = (email) => {
+    axios.post(`${URL}/api/login`, {
+      email: email || sessionStorage.getItem('authenticated'),
+    }).then(({ data }) => {
+      if (email) {
+        sessionStorage.setItem('authenticated', email);
+      }
+      this.setState({ authenticate: true, email: sessionStorage.authenticated, currentData: data });
+      const { address, cameraIds, residents, _id } = data;
+    });
+  };
+
+  onAuthenticate = (email) => {
+    this.fetchUserInfo(email);
+  };
+
+  onCollapse = (collapsed) => {
     console.log(collapsed);
     this.setState({ collapsed });
   };
@@ -33,9 +52,9 @@ export default class Sidebar extends Component {
             count={this.state.unreadCount}
             style={{
               marginLeft: 10,
-              backgroundColor: "#fff",
-              color: "#999",
-              boxShadow: "0 0 0 1px #d9d9d9 inset"
+              backgroundColor: '#fff',
+              color: '#999',
+              boxShadow: '0 0 0 1px #d9d9d9 inset'
             }}
           />
         )}
@@ -48,6 +67,10 @@ export default class Sidebar extends Component {
   };
 
   componentDidMount() {
+    if (!this.state.authenticate) {
+      this.fetchUserInfo();
+      return;
+    }
     axios
       .post(`${URL}/api/login`, {
         email: this.state.userEmail
@@ -106,19 +129,29 @@ export default class Sidebar extends Component {
   };
 
   render() {
-    const { collapsed, unreadCount, currentData } = this.state;
+    const { collapsed, unreadCount, email, currentData } = this.state;
+
+    if (!sessionStorage.authenticated) {
+      return (
+        <AuthenticationPage onAuthenticate={this.onAuthenticate}/>
+      )
+    }
+
+    if (this.props.location.pathname === '/') {
+      return <Redirect to="/private-mails"/>
+    }
     let address = "Home";
     if (currentData && currentData.address) address = currentData.address;
-    if (this.props.location.pathname === "/") {
-      return <Redirect to="/private-mails" />;
-    }
     return (
-      <Layout style={{ minHeight: "100vh" }}>
+      <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
           <div className="logo" />
           <Menu selectable={false} theme="dark">
             <Menu.Item key="0">
-              <span hidden={collapsed}>{address}</span>
+              <span hidden={collapsed} style={{ fontSize: '16px' }}><strong>{email}</strong></span>
+            </Menu.Item>
+            <Menu.Item key="0.1" className="small-menu-item">
+              <span hidden={collapsed} style={{ fontSize: '13px' }}>{address}</span>
             </Menu.Item>
           </Menu>
           <Menu theme="dark" defaultSelectedKeys={["3"]} defaultOpenKeys={["sub1"]} mode="inline">
@@ -133,8 +166,8 @@ export default class Sidebar extends Component {
             >
               <Menu.Item key="3" onClick={this.markAsRead}>
                 {this.generateLink(
-                  "private-mails",
-                  "Private mails",
+                  'private-mails',
+                  'Private mails',
                   false,
                   true
                 )}
@@ -145,18 +178,18 @@ export default class Sidebar extends Component {
             </SubMenu>
             <Menu.Item key="9">
               <Icon type="user-add" />
-              {this.generateLink("add-user", "Add user", collapsed)}
+              { this.generateLink('add-user', 'Add user', collapsed) }
             </Menu.Item>
             <Menu.Item key="10">
               <Icon type="camera-o" />
-              {this.generateLink("add-mailbox", "Add mailbox", collapsed)}
+              { this.generateLink('add-mailbox', 'Add mailbox', collapsed) }
             </Menu.Item>
           </Menu>
         </Sider>
         <MainContent
           route={this.props}
           fn={this.updateUnreadMail}
-          email={this.state.userEmail}
+          email={this.state.userEmail || this.state.email}
           url={URL}
           socket={this.state.socket}
         />
