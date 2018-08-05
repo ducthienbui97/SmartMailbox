@@ -18,3 +18,23 @@
     width: 100px;
   }
 }
+
+.authenticate-bar {
+  margin-top: 40px;
+  max-height: 60px;
+  max-width: 450px;
+}
+
+.center-in-viewport {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.center {
+  text-align: center;
+}
+
+.center h2 {
+  font-size: 30px;
+}
