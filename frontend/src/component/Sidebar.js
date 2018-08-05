@@ -9,7 +9,8 @@ import AuthenticationPage from './AuthenticationPage';
 
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
-const URL = 'https://aqueous-gorge-93987.herokuapp.com';
+// const URL = 'https://aqueous-gorge-93987.herokuapp.com';
+const URL = 'http://localhost:8080';
 export default class Sidebar extends Component {
   state = {
     collapsed: false,
@@ -22,13 +23,13 @@ export default class Sidebar extends Component {
   };
 
   fetchUserInfo = (email) => {
-    axios.post('http://localhost:8080/api/login', {
+    axios.post(`${URL}/api/login`, {
       email: email || localStorage.getItem('authenticated'),
     }).then(({ data }) => {
       if (email) {
         localStorage.setItem('authenticated', email);
       }
-      this.setState({ authenticate: true, email: localStorage.authenticated });
+      this.setState({ authenticate: true, email: localStorage.authenticated, currentData: data });
       const { address, cameraIds, residents, _id } = data;
     });
   };
@@ -148,7 +149,9 @@ export default class Sidebar extends Component {
           <Menu selectable={false} theme="dark">
             <Menu.Item key="0">
               <span hidden={collapsed} style={{ fontSize: '16px' }}><strong>{email}</strong></span>
-              <span hidden={collapsed} style={{ fontSize: '10px' }}>{address}</span>
+            </Menu.Item>
+            <Menu.Item key="0.1" className="small-menu-item">
+              <span hidden={collapsed} style={{ fontSize: '13px' }}>{address}</span>
             </Menu.Item>
           </Menu>
           <Menu theme="dark" defaultSelectedKeys={['3']} mode="inline">
