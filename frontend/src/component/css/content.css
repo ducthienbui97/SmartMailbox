@@ -9,12 +9,13 @@
   min-height: 100px;
 }
 
-.mail-img {
-  max-width: 200px;
+.ant-upload-list-picture-card .ant-upload-list-item {
+  min-width: 150px !important;
+  height: auto;
 }
 
 @media only screen and (max-width: 980px) {
-  .mail-img {
-    width: 100px;
+  .ant-upload-list-picture-card .ant-upload-list-item {
+    width: 100px; 
   }
 }

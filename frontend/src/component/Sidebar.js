@@ -110,7 +110,7 @@ export default class Sidebar extends Component {
     let address = "Home";
     if (currentData && currentData.address) address = currentData.address;
     if (this.props.location.pathname === "/") {
-      return <Redirect to="/household-mails" />;
+      return <Redirect to="/private-mails" />;
     }
     return (
       <Layout style={{ minHeight: "100vh" }}>
@@ -121,26 +121,26 @@ export default class Sidebar extends Component {
               <span hidden={collapsed}>{address}</span>
             </Menu.Item>
           </Menu>
-          <Menu theme="dark" defaultSelectedKeys={["3"]} mode="inline">
+          <Menu theme="dark" defaultSelectedKeys={["3"]} defaultOpenKeys={["sub1"]} mode="inline">
             <SubMenu
               key="sub1"
               title={
                 <span>
-                  <Icon type="user" />
+                  <Icon type="mail" />
                   <span>Mail list</span>
                 </span>
               }
             >
-              <Menu.Item key="3">
-                {this.generateLink("household-mails", "General mails", false)}
-              </Menu.Item>
-              <Menu.Item key="4" onClick={this.markAsRead}>
+              <Menu.Item key="3" onClick={this.markAsRead}>
                 {this.generateLink(
                   "private-mails",
                   "Private mails",
                   false,
                   true
                 )}
+              </Menu.Item>
+              <Menu.Item key="4">
+                {this.generateLink("household-mails", "General mails", false)}
               </Menu.Item>
             </SubMenu>
             <Menu.Item key="9">

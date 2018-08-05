@@ -66,7 +66,10 @@ export default class AddImage extends Component {
     const { visible, confirmLoading, ModalText, fileList } = this.state;
     return (
       <div>
-        <Button type="primary" onClick={this.showModal}>
+        <Button type="primary" onClick={this.showModal} style={{
+          position: 'relative',
+          bottom: 15
+        }}>
           Add new mail
         </Button>
         <Modal

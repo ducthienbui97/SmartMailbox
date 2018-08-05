@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Spin, Breadcrumb, Layout, List, Avatar, Icon, Row, Col } from "antd";
 import AddImage from "./AddImageModal/AddImage";
+import PreviewImage from './PreviewImage'
 import axios from "axios";
 
 const IconText = ({ type, text }) => (
@@ -121,11 +122,11 @@ export default class PrivateEmails extends Component {
           }}
         >
           <Breadcrumb.Item>
-            <strong> Private mails </strong>
+            <strong>Mail list</strong>
           </Breadcrumb.Item>
           <Breadcrumb.Item style={headerStyle}> Private mails </Breadcrumb.Item>
         </Breadcrumb>
-        <AddImage url={this.props.url} email={this.props.email} />
+        <AddImage url={this.props.url} email={this.props.email}/>
         <div
           style={{
             padding: 24,
@@ -156,7 +157,7 @@ export default class PrivateEmails extends Component {
               >
                 <Row>
                   <Col span={5}>
-                    <img src={item.imgLink} className="mail-img" />
+                    <PreviewImage img={item.imgLink}/>
                   </Col>
                   <Col
                     style={{
