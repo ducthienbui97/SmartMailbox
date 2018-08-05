@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { Breadcrumb, Layout, List, Avatar, Icon, Row, Col } from 'antd';
+import React, { Component } from "react";
+import { Breadcrumb, Layout, List, Avatar, Icon, Row, Col } from "antd";
 import AddImage from "./AddImageModal/AddImage";
-import axios from 'axios';
+import axios from "axios";
 
 const IconText = ({ type, text }) => (
   <span>
@@ -15,20 +15,22 @@ export default class HouseholdEmails extends Component {
   render() {
     return (
       <div>
-        <Breadcrumb style={{ margin: '16px 0' }}>
-          <Breadcrumb.Item><strong>Household mails</strong></Breadcrumb.Item>
+        <Breadcrumb style={{ margin: "16px 0" }}>
+          <Breadcrumb.Item>
+            <strong>Household mails</strong>
+          </Breadcrumb.Item>
         </Breadcrumb>
-        <AddImage />
-        <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+        <AddImage url={this.props.url} email={this.props.email} />
+        <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
           Here is the something
           <List
             itemLayout="vertical"
             size="large"
             pagination={{
-              onChange: (page) => {
+              onChange: page => {
                 console.log(page);
               },
-              pageSize: 3,
+              pageSize: 3
             }}
             dataSource={listData}
             renderItem={item => (

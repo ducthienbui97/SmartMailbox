@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { Form, Input, Icon, Button, Row, Col } from 'antd';
+import React, { Component } from "react";
+import { Form, Input, Icon, Button, Row, Col } from "antd";
 
 const FormItem = Form.Item;
 
 class EmailInput extends Component {
   state = {
-    email: ''
+    email: ""
   };
 
   emitEmpty = () => {
     this.emailInput.focus();
-    this.setState({ email: '' });
+    this.setState({ email: "" });
   };
 
   onChangeEmail = e => {
@@ -30,14 +30,14 @@ class EmailInput extends Component {
     return (
       <div
         style={{
-          display: 'flex',
+          display: "flex",
           marginTop: 5,
           marginBottom: 5
         }}
       >
         <Input
           placeholder="Enter email"
-          prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+          prefix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
           suffix={suffix}
           value={email}
           onChange={this.onChangeEmail}
@@ -47,9 +47,9 @@ class EmailInput extends Component {
         <Button
           shape="circle"
           style={{
-            border: 'none',
+            border: "none",
             marginLeft: 5,
-            backgroundColor: '#F0F2F5'
+            backgroundColor: "#F0F2F5"
           }}
           onClick={() => this.props.handleDelete(index)}
         >
@@ -125,7 +125,7 @@ export default class InviteMember extends Component {
           <Col offset={3}>
             <Icon
               type="usergroup-add"
-              style={{ fontSize: 40, color: '#2d9ee0' }}
+              style={{ fontSize: 40, color: "#2d9ee0" }}
             />
             <h1>Invite Members to House Name</h1>
           </Col>
@@ -145,7 +145,7 @@ export default class InviteMember extends Component {
               <a
                 onClick={this.increment}
                 style={{
-                  display: 'inline-block',
+                  display: "inline-block",
                   marginTop: -15,
                   marginBottom: 25
                 }}

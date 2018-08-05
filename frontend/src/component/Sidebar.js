@@ -1,20 +1,24 @@
-import React, { Component } from 'react';
-import { Switch, Route, Link, Redirect } from 'react-router-dom';
-import { Layout, Menu, Breadcrumb, Icon, Badge } from 'antd';
-import axios from 'axios';
-import socket from '../socket';
+import React, { Component } from "react";
+import { Switch, Route, Link, Redirect } from "react-router-dom";
+import { Layout, Menu, Breadcrumb, Icon, Badge } from "antd";
+import axios from "axios";
+import io from "socket.io-client";
 
 import MainContent from './content/Content';
 import AuthenticationPage from './AuthenticationPage';
 
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
-const URL = 'https://aqueous-gorge-93987.herokuapp.com/';
+const URL = 'https://aqueous-gorge-93987.herokuapp.com';
 export default class Sidebar extends Component {
   state = {
     collapsed: false,
+    userId: null,
+    currentData: null,
     unreadCount: 0,
     authenticate: false,
+    userEmail: "qanh123@gmail.com",
+    socket: io(URL),
   };
 
   fetchUserInfo = (email) => {
@@ -64,29 +68,67 @@ export default class Sidebar extends Component {
   componentDidMount() {
     if (!this.state.authenticate) {
       this.fetchUserInfo();
+      return;
     }
-    window.OneSignal.push(function () {
-      /* These examples are all valid */
-      window.OneSignal.getUserId(function (userId) {
-        console.log("OneSignal User ID:", userId);
-        // (Output) OneSignal User ID: 270a35cd-4dda-4b3f-b04e-41d7463a2316
+    axios
+      .post(`${URL}/api/login`, {
+        email: this.state.userEmail
+      })
+      .then(({ data }) => {
+        console.log("res data is ", data);
+        this.setState({ currentData: data });
+        let that = this;
+        window.OneSignal.push(function() {
+          window.OneSignal.getUserId(function(userId) {
+            if (that.state.userId != userId) {
+              if (that.state.userId) {
+                axios.post(`${URL}/api/removeNotificationIds`, {
+                  email: this.state.userEmail,
+                  notificationId: that.state.userId
+                });
+              }
+              that.setState({ userId });
+              if (userId) {
+                axios.post(`${URL}/api/setNotificationIds`, {
+                  email: that.state.userEmail,
+                  notificationId: userId
+                });
+              }
+            }
+          });
+        });
+        window.OneSignal.on("subscriptionChange", function(isSubscribed) {
+          window.OneSignal.getUserId(function(userId) {
+            if (that.state.userId != userId) {
+              if (that.state.userId) {
+                axios.post(`${URL}/api/removeNotificationIds`, {
+                  email: that.state.userEmail,
+                  notificationId: that.state.userId
+                });
+              }
+              that.setState({ userId });
+              if (userId) {
+                axios.post(`${URL}/api/setNotificationIds`, {
+                  email: that.state.userEmail,
+                  notificationId: userId
+                });
+              }
+            }
+          });
+        });
       });
-    });
-    socket.on('mail-added', () => {
-      console.log('CLIENT RECEIVED MSG');
-    });
-  };
+  }
 
   markAsRead = () => {
     axios
-      .post('/api/mark-as-read', {
-        email: 'qanh123@gmail.com'
+      .post(`${URL}/api/mark-as-read`, {
+        email: this.state.userEmail
       })
       .then(() => this.setState({ unreadCount: 0 }));
   };
 
   render() {
-    const { collapsed, unreadCount, email } = this.state;
+    const { collapsed, unreadCount, email, currentData } = this.state;
 
     if (!localStorage.authenticated) {
       return (
@@ -97,6 +139,8 @@ export default class Sidebar extends Component {
     if (this.props.location.pathname === '/') {
       return <Redirect  to="/household-mails"/>
     }
+    let address = "Home";
+    if (currentData && currentData.address) address = currentData.address;
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
@@ -104,6 +148,7 @@ export default class Sidebar extends Component {
           <Menu selectable={false} theme="dark">
             <Menu.Item key="0">
               <span hidden={collapsed} style={{ fontSize: '16px' }}><strong>{email}</strong></span>
+              <span hidden={collapsed} style={{ fontSize: '10px' }}>{address}</span>
             </Menu.Item>
           </Menu>
           <Menu theme="dark" defaultSelectedKeys={['3']} mode="inline">
@@ -138,7 +183,13 @@ export default class Sidebar extends Component {
             </Menu.Item>
           </Menu>
         </Sider>
-        <MainContent route={this.props} fn={this.updateUnreadMail} />
+        <MainContent
+          route={this.props}
+          fn={this.updateUnreadMail}
+          email={this.state.userEmail}
+          url={URL}
+          socket={this.state.socket}
+        />
       </Layout>
     );
   }
